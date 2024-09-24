@@ -1,11 +1,18 @@
 package service;
 
 
+import dto.UserResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
+    public UserResponse getAllUsers() {
+        return new UserResponse();
+    }
     public UserService() {
+        // TODO document why this constructor is empty
+
     }
 
     public void add() {
