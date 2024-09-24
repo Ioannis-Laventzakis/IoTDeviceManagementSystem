@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class IoTDeviceManagementSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(IoTDeviceManagementSystemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(IoTDeviceManagementSystemApplication.class, args);
+    }
 
 }
