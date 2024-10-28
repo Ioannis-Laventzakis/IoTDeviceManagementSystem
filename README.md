@@ -1,93 +1,83 @@
-# Key Features for the IoT Device Management System
--Internet of Things.
+# IoT Device Management Dashboard
 
-## Device Registration
+This project is an IoT Device Management Dashboard developed with Java and Spring Boot. It provides a RESTful API to manage IoT devices and user reviews, including functionalities for adding, updating, deleting, and listing devices and users. The application is designed to showcase backend skills with Spring Boot, JPA, and basic CRUD operations.
 
-- Users can register IoT devices (e.g., sensors, smart lights) with the system.
-- Each device will have a unique identifier, type (e.g., temperature sensor, motion sensor), and status (e.g., active, inactive).
+## Project Structure
 
-## Real-time Monitoring
+The project consists of the following main components:
 
-- Real-time updates for devices (status, readings, etc.).
-- Display the latest device states on a dashboard.
+- **Models**: The primary entities representing users, IoT devices, and reviews.
+- **Repositories**: Interfaces extending JPA repositories for database interactions.
+- **Services**: Business logic layer that handles the core functionalities of each entity.
+- **Controllers**: RESTful APIs for interacting with the application.
 
-## Trigger Actions
+## Technologies Used
 
-- Users can define actions based on device readings (e.g., turn on lights when motion is detected).
-- Users can manually trigger actions (e.g., turn off a light remotely).
+- **Java 17**: The core programming language.
+- **Spring Boot**: For building the application and structuring the project.
+- **Spring Data JPA**: To interact with the database using JPA repositories.
+- **Lombok**: To reduce boilerplate code.
+- **JUnit & Mockito**: For testing the service layer.
+- **H2 / PostgreSQL (Configurable)**: Database setup can be configured to work with either H2 for testing or PostgreSQL for production.
 
-## Notifications
+## Modules Overview
 
-- Send notifications (via email/SMS) for critical events like device failure or abnormal readings.
+### 1. User
 
-## Scheduling
+- **Model**: `User` - Represents a user with properties such as id, name, email, password, role, and status. Each user can have multiple reviews associated with them.
+- **Repository**: `UserRepository` - Provides methods for CRUD operations and custom queries, such as `findByEmail`.
+- **Service**: `UserService` - Handles business logic for user management, including methods to add, delete, update, and list users.
+- **Controller**: `UserController` - REST API for user management, with endpoints for fetching users.
 
-- Set time-based triggers for devices (e.g., "turn off lights at 10 PM").
+### 2. IoTDevice
 
-# Tech Stack
+- **Model**: `IoTDevice` - Represents an IoT device with properties such as id, type, status, and a relationship with a User.
+- **Repository**: `IoTDeviceRepository` - Provides methods for CRUD operations and custom queries, such as `findByType` and `findByStatus`.
+- **Service**: `IoTDeviceService` - Handles business logic for device management, including methods to add, delete, update, and list devices.
+- **Controller**: (Optional) - REST API endpoints can be created to manage devices if needed.
 
-- **Java Spring Boot**: Core of the application.
-- **PostgreSQL**: For device registrations, logging events, user management.
-- **Spring Security**: For user authentication and role management (admin, user, etc.).
-- **MQTT Protocol**: For communication with IoT devices.
-- **WebSocket**: For real-time updates to the dashboard.
-- **Bootstrap/Thymeleaf**: To create a simple, responsive front-end.
+### 3. Review
 
-# Step-by-Step Plan
+- **Model**: `Review` - Represents a review associated with a user, with properties like id, content, rating, and createdAt timestamp.
+- **Relationship**: Linked with `User` as each review belongs to a single user.
 
-1. **Project Setup**
-   - Set up a Spring Boot project using Maven or Gradle.
-   - Create modules for core components: user management, device management, event handling, etc.
-   - Initialize a PostgreSQL database and set up connections via JPA.
+## REST API Endpoints
 
-2. **Database Design**
-   - You'll need several tables for this:
-     - **Users**: To manage authentication and permissions.
-     - **Devices**: To store device metadata (name, type, status, user_id).
-     - **Device Actions**: To log actions performed on devices.
-     - **Events**: To log real-time device events and readings (e.g., temperature from sensors).
-     - **Scheduled Tasks**: For managing time-based triggers.
+### User Endpoints
 
-3. **Device Management Module**
-   - Create REST APIs for registering, updating, and deleting devices.
-   - Example endpoints:
-     - `POST /devices`: Register a new device.
-     - `GET /devices`: Get all registered devices for a user.
-     - `PUT /devices/{id}`: Update device status or metadata.
-     - `DELETE /devices/{id}`: Remove a device from the system.
+- `GET /users`: Retrieve a list of all users.
+- `POST /users`: Add a new user (currently handled in the service layer).
+- `DELETE /users/{id}`: Delete a user by ID.
+- `PUT /users/{id}`: Update a user by ID.
 
-4. **Integrate MQTT for Device Communication**
-   - Use Eclipse Paho or Spring Integration MQTT to implement the MQTT protocol.
-   - Define a topic structure to handle device communication (e.g., home/sensor/temperature).
-   - Implement listeners that subscribe to topics and update the database with new data from IoT devices.
+### IoT Device Endpoints
 
-5. **WebSocket for Real-time Updates**
-   - Add WebSocket support to the Spring Boot application.
-   - Whenever a device status changes, broadcast that update to all connected clients.
-   - Example: A dashboard displaying the current status of devices (online/offline, temperature, etc.).
+- `GET /devices`: Retrieve a list of all IoT devices.
+- `POST /devices`: Add a new IoT device.
+- `DELETE /devices/{id}`: Delete a device by ID.
+- `PUT /devices/{id}`: Update a device by ID.
 
-6. **Action Triggers**
-   - Implement logic for user-defined actions (e.g., turn on lights when a motion sensor is triggered).
-   - This could be achieved using simple if-else logic, or by defining a more complex rule system.
+## Testing
 
-7. **Scheduling**
-   - Use Spring's `@Scheduled` to define periodic tasks that control devices (e.g., turn on/off devices at a specific time).
-   - Allow users to create and manage these schedules from the frontend.
+Unit tests are implemented in the `IoTDeviceServiceTest` class using JUnit and Mockito. These tests verify the core functionality of the `IoTDeviceService` layer, including:
 
-8. **Frontend (Optional)**
-   - Use Thymeleaf templates to create a simple dashboard for users to register devices, view statuses, and define actions.
-   - Bootstrap for responsive design.
+- `addDevice`: Ensures a device is correctly added.
+- `deleteDevice`: Checks that a device can be deleted by ID.
+- `updateDevice`: Validates updating an existing device or throwing an exception if the device is not found.
+- `listDevices`: Confirms that the service returns all devices.
 
-# Let's Start with the Basics
+To run tests, execute:
 
-1. **Setting Up the Spring Boot Project**
-   - Use Spring Initializr to generate a basic project with the following dependencies:
-     - Spring Web
-     - Spring Data JPA
-     - PostgreSQL
-     - Spring Security
-     - Thymeleaf (optional for front-end)
-     - MQTT (via Spring Integration)
-     - WebSocket#   I o T D e v i c e M a n a g e m e n t S y s t e m 
- 
- 
+```bash
+mvn test
+```
+### Build and Run
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+# Future Improvements
+- Implement a front-end UI for visualizing devices and user reviews.
+- Integrate security features using Spring Security.
+- Extend device functionalities to include IoT-specific features like telemetry data tracking.
