@@ -1,26 +1,42 @@
 package service;
 
-
+import model.IoTDevice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import repo.IoTDeviceRepository;
+
+
+import java.util.List;
 
 @Service
 public class IoTDeviceService {
-    public IoTDeviceService() {
+
+    private final IoTDeviceRepository iotDeviceRepository;
+
+    @Autowired
+    public IoTDeviceService(IoTDeviceRepository iotDeviceRepository) {
+        this.iotDeviceRepository = iotDeviceRepository;
     }
 
-    public void add() {
-        System.out.println("IoTDevice added");
+    public IoTDevice addDevice(IoTDevice device) {
+        return iotDeviceRepository.save(device);
     }
 
-    public void delete() {
-        System.out.println("IoTDevice deleted");
+    public void deleteDevice(Long deviceId) {
+        iotDeviceRepository.deleteById(deviceId);
     }
 
-    public void update() {
-        System.out.println("IoTDevice updated");
+    public IoTDevice updateDevice(Long id, IoTDevice updatedDevice) {
+        return iotDeviceRepository.findById(id)
+                .map(device -> {
+                    device.setType(updatedDevice.getType());
+                    device.setStatus(updatedDevice.getStatus());
+                    return iotDeviceRepository.save(device);
+                })
+                .orElseThrow(() -> new RuntimeException("Device not found"));
     }
 
-    public void list() {
-        System.out.println("IoTDevice listed");
+    public List<IoTDevice> listDevices() {
+        return iotDeviceRepository.findAll();
     }
 }

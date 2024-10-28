@@ -3,9 +3,6 @@ package model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-@Setter
-@Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +21,6 @@ public class IoTDevice {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private User user;
-
 }

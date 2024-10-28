@@ -1,11 +1,13 @@
 package repo;
 
-import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import model.IoTDevice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface IoTDeviceRepository extends JpaRepository<IoTDevice, Long> {
-    IoTDevice findByType(String type);
-    IoTDevice findByStatus(String status);
+    List<IoTDevice> findByType(String type);
+    List<IoTDevice> findByStatus(String status);
 }
